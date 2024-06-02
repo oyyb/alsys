@@ -1,26 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { useRoutes } from "react-router-dom"
+import { routes } from './router/routes';
+import BeforeEach from './router/before-each';
 
-function App() {
+const App = () => {
+  const element = useRoutes(routes)
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <BeforeEach>
+        {element}
+      </BeforeEach>
     </div>
-  );
+  )
+  // return (
+  //   <div className="App">
+  //     <Routes>
+  //       <Route path="/" element={<Navigate to="/index" replace />} />
+  //       <Route path="/index" element={<Index />} />
+  //       <Route path="/admin-main" element={<AdminMain />}>
+  //         <Route path="admin-images" element={<AdminImages />} />
+  //       </Route>
+  //       <Route path="/login" element={<Login />} />
+  //       <Route path="/register" element={<Register />} />
+  //     </Routes>
+  //   </div>
+  // );
 }
 
 export default App;
