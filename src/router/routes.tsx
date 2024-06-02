@@ -8,7 +8,7 @@ import OrganizerManage from "../pages/admin-main/organizer-manage";
 import Manager from "../pages/organizer-main/manager";
 import OrganizerTeam from "../pages/organizer-main/team";
 import Ticket from "../pages/organizer-main/ticket";
-import OrganizerMain from "../pages/organizer-main/orgainzer-main";
+import OrganizerMain from "../pages/organizer-main/organizer-main";
 import OgmanagerMain from "../pages/ogmanager-main/ogmanager-main";
 import Race from "../pages/ogmanager-main/race";
 import Place from "../pages/ogmanager-main/place";
@@ -51,7 +51,7 @@ export const routes: Route[] = [
         ]
     },
     {
-        path: '/orgainzer-main',
+        path: '/organizer-main',
         element: <OrganizerMain />,
         children: [
             {

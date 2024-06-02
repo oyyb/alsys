@@ -23,10 +23,10 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-    getItem('赛事管理员管理', 'orgainzer-main/manager', <SettingOutlined />),
-    getItem('球队管理', 'orgainzer-main/team', <SettingOutlined />),
-    getItem('门票管理', 'orgainzer-main/ticket', <SettingOutlined />),
-    getItem('周边管理', 'orgainzer-main/goods', <SettingOutlined />),
+    getItem('赛事管理员管理', 'organizer-main/manager', <SettingOutlined />),
+    getItem('球队管理', 'organizer-main/team', <SettingOutlined />),
+    getItem('门票管理', 'organizer-main/ticket', <SettingOutlined />),
+    getItem('周边管理', 'organizer-main/goods', <SettingOutlined />),
 ];
 
 export default function OrganizerMain() {
@@ -64,7 +64,7 @@ export default function OrganizerMain() {
                 <div style={{ height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <div style={{ color: '#fff', fontSize: '26px' }}>赛事方端</div>
                 </div>
-                <Menu theme="dark" defaultSelectedKeys={['orgainzer-main/manager']} mode="inline" items={items} onClick={onClick} />
+                <Menu theme="dark" defaultSelectedKeys={['organizer-main/manager']} mode="inline" items={items} onClick={onClick} />
             </Sider>
             <Layout style={{ minHeight: '100vh' }}>
                 <Header style={{ padding: 0, background: colorBgContainer, display: "flex", justifyContent: "space-between" }}>

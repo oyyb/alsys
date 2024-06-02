@@ -207,7 +207,7 @@ const Team = () => {
                 </Form.Item>
             </Form>
         </Modal>
-        <Table bordered columns={columns} dataSource={dataSource} scroll={{ x: 1500, y: 500 }} pagination={false} />
+        <Table rowKey={(record) => record.id} bordered columns={columns} dataSource={dataSource} scroll={{ x: 1500, y: 500 }} pagination={false} />
     </div>
 }
 
