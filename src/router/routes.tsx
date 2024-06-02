@@ -34,7 +34,7 @@ export interface Route {
 export const routes: Route[] = [
     {
         path: '/',
-        element: <Navigate to="/index" replace />,
+        element: <Navigate to="/login" replace />,
     },
     // {
     //     path: '/index',

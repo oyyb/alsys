@@ -23,7 +23,7 @@ export default function Register() {
 
     return (
         <main>
-            {/* <h1 style={{ textAlign: 'center', fontSize: '60px', fontWeight: 'bold', padding: '24px' }}>赛事管理系统</h1> */}
+            <h1 style={{ textAlign: 'center', fontSize: '60px', fontWeight: 'bold', padding: '24px' }}>体育售票系统</h1>
 
             <h1 style={{ textAlign: 'center', fontSize: '30px', fontWeight: 'bold', padding: '24px' }}>注册</h1>
             <Form

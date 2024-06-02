@@ -20,13 +20,13 @@ export default function Login() {
             message.success('登陆成功!');
             setUserInfo('userInfo', res.data)
             if (values.type === '1') {
-                navigate('/admin-main/admin-images')
+                navigate('/admin-main/organizer-manage')
             } else if (values.type === '2') {
-                navigate('/admin-main/admin-images')
+                navigate('/organizer-main/manager')
             } else if (values.type === '3') {
-                navigate('/admin-main/admin-images')
+                navigate('/ogmanager-main/race')
             } else if (values.type === '4') {
-                navigate('/admin-main/admin-images')
+                navigate('/user-main/user-index')
             }
         } catch (error) {
             console.log('error', error);
@@ -41,7 +41,7 @@ export default function Login() {
         <main>
             {/* <div className='border-solid border-2 border-[#1677ff] shadow-[#1677ff] rounded-lg px-24 py-4'> */}
 
-            <h1 style={{ textAlign: 'center', fontSize: '60px', fontWeight: 'bold', padding: '24px' }}>后台管理系统</h1>
+            <h1 style={{ textAlign: 'center', fontSize: '60px', fontWeight: 'bold', padding: '24px' }}>体育售票系统</h1>
 
             <h1 style={{ textAlign: 'center', fontSize: '30px', fontWeight: 'bold', padding: '24px' }}>登陆</h1>
             <Form
