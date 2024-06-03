@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { BaseResultType, baseApi } from "../../api/base-api"
-import { Button, Form, FormProps, Input, InputNumber, Modal, Popconfirm, PopconfirmProps, message } from "antd"
+import { Button, Collapse, CollapseProps, Form, FormProps, Input, InputNumber, Modal, Popconfirm, PopconfirmProps, message } from "antd"
 import { useDeepCompareEffect } from "ahooks"
 import { TicketsParamsType, ticketsApi } from "../../api/ticket-api"
 import { useUserInfo } from "../../hooks/useUserInfo"
@@ -26,6 +26,29 @@ const UserBuy = () => {
             "uid": 1
         }
     ])
+
+    const [goodsData, setGoodsData] = useState<BaseResultType.UsergoodshisType[]>([
+        {
+            "boughttime": "2024-05-26 22:08:26",
+            "cost": "499.90",
+            "count": 1,
+            "gid": 2,
+            "id": 1,
+            "image": "/static/image/ogmanager/a.png",
+            "name": "湖人队23号球衣",
+            "uid": 1
+        },
+        {
+            "boughttime": "2024-05-26 22:08:26",
+            "cost": "199.80",
+            "count": 1,
+            "gid": 3,
+            "id": 2,
+            "image": "/static/image/maozi/a.png",
+            "name": "联名棒球帽",
+            "uid": 1
+        }
+    ])
     const fetchData = async () => {
         try {
             const res = await baseApi.userticketshis({
@@ -41,114 +64,87 @@ const UserBuy = () => {
         }
     }
 
-    useDeepCompareEffect(() => {
-        fetchData()
-    }, [])
-
-    const { getUserInfo } = useUserInfo()
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [form] = Form.useForm();
-
-    const showModal = (data?: Omit<TicketsParamsType.BuyTicketsType, 'userid' | 'count'>) => {
-        setIsModalOpen(true);
-        if (data) {
-            form.setFieldsValue({
-                ...data,
-                count: 1
-            })
-        }
-    };
-
-    const handleOk = () => {
-        setIsModalOpen(false);
-    };
-
-    const handleCancel = () => {
-        setIsModalOpen(false);
-    };
-
-    const onFinish: FormProps<TicketsParamsType.BuyTicketsType>['onFinish'] = async (values) => {
+    const fetchGoodsData = async () => {
         try {
-            const res = await ticketsApi.buytickets({ ...values, userid: getUserInfo('userInfo').id })
+            const res = await baseApi.usergoodshis({
+                userid: getUserInfo('userInfo').id
+            })
             if (res.code === 200) {
-                message.success(res.msg);
-            } else {
-                message.warning(res.msg);
+                if (res.data) {
+                    setGoodsData(res.data)
+                }
             }
         } catch (error) {
             console.log(error);
         }
+    }
+
+    useDeepCompareEffect(() => {
+        fetchData()
+        fetchGoodsData()
+    }, [])
+
+    const onChange = (key: string | string[]) => {
+        console.log(key);
     };
 
-    const onFinishFailed: FormProps<TicketsParamsType.BuyTicketsType>['onFinishFailed'] = (errorInfo) => {
-        console.log('Failed:', errorInfo);
-    };
-    return <div>
-        <Modal title="填写" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} centered footer={null}>
-            <Form
-                name="basic"
-                labelCol={{ span: 8 }}
-                wrapperCol={{ span: 16 }}
-                style={{ maxWidth: 600 }}
-                onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
-                autoComplete="off"
-                form={form}
-            >
-                <Form.Item<TicketsParamsType.BuyTicketsType>
-                    label="门票ID"
-                    name="ticketsid"
-                >
-                    <Input disabled />
-                </Form.Item>
+    const { getUserInfo } = useUserInfo()
 
-                <Form.Item<TicketsParamsType.BuyTicketsType>
-                    label="购买金额"
-                    name="price"
-                    rules={[{ required: true, message: '请输入购买金额' }]}
-                >
-                    <InputNumber disabled />
-                </Form.Item>
-
-                <Form.Item<TicketsParamsType.BuyTicketsType>
-                    label="购买数量"
-                    name="count"
-                    rules={[{ required: true, message: '请输入购买数量' }]}
-                >
-                    <InputNumber min={1} />
-                </Form.Item>
-
-                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                    <Button type="primary" htmlType="submit">
-                        确定
-                    </Button>
-                </Form.Item>
-            </Form>
-        </Modal>
+    const items: CollapseProps['items'] = [
         {
-            data.map((val, idx) => {
-                return (
-                    <div key={val.id} style={{ display: 'flex', color: '#fff', backgroundColor: '#000', justifyContent: 'space-evenly', margin: '0 120px 30px 120px', alignItems: 'center', padding: '30px 0' }}>
-                        <div>
-                            <p style={{ fontSize: '26px', color: 'red' }}>¥ {val.price}</p>
-                            <p style={{ fontSize: '22px' }}>购买数量：{val.count}张</p>
-                        </div>
+            key: '1',
+            label: '购票记录',
+            children: <>
+                {
+                    data.map((val, idx) => {
+                        return (
+                            <div key={val.id} style={{ display: 'flex', color: '#fff', backgroundColor: '#000', justifyContent: 'space-evenly', margin: '0 120px 30px 120px', alignItems: 'center', padding: '30px 0' }}>
+                                <div>
+                                    <p style={{ fontSize: '26px', color: 'red' }}>¥ {val.price}</p>
+                                    <p style={{ fontSize: '22px' }}>购买数量：{val.count}张</p>
+                                </div>
 
-                        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                            <p style={{ fontSize: '32px' }}>{val.name}</p>
-                            <p style={{ fontSize: '22px' }}>{val.buytime}</p>
-                        </div>
+                                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                                    <p style={{ fontSize: '32px' }}>{val.name}</p>
+                                    <p style={{ fontSize: '22px' }}>{val.buytime}</p>
+                                </div>
+                            </div>
+                        )
+                    })
+                }
+            </>,
+        },
+        {
+            key: '2',
+            label: '周边记录',
+            children: <>
+                {
+                    goodsData.map((val, idx) => {
+                        return (
+                            <div key={val.id} style={{ display: 'flex', color: '#fff', backgroundColor: '#000', justifyContent: 'space-evenly', margin: '0 120px 30px 120px', alignItems: 'center', padding: '30px 0' }}>
+                                <div className="img">
+                                    <img src={val.image} alt="" />
+                                </div>
 
-                        {/* <div>
-                            <Button type='primary' onClick={() => showModal({
-                                ticketsid: val.id,
-                                price: val.price,
-                            })}>购买</Button>
-                        </div> */}
-                    </div>
-                )
-            })
-        }
+                                <div>
+                                    <p style={{ fontSize: '26px', color: 'red' }}>¥ {val.cost}</p>
+                                    <p style={{ fontSize: '22px' }}>购买数量：{val.count}</p>
+                                </div>
+
+                                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                                    <p style={{ fontSize: '32px' }}>{val.name}</p>
+                                    <p style={{ fontSize: '22px' }}>{val.boughttime}</p>
+                                </div>
+                            </div>
+                        )
+                    })
+                }
+            </>,
+        },
+    ];
+
+    return <div>
+        <Collapse items={items} defaultActiveKey={['1', '2']} onChange={onChange} />
     </div>
 }
 

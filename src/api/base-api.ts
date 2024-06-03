@@ -21,7 +21,7 @@ export interface BaseTypeMethod {
     /**
      * @description 删除方法
      */
-    raceunstart: (params: BaseParamsType.RaceunstartType) => Promise<Result<BaseResultType.RaceunstartType>>
+    raceunstart: (params: BaseParamsType.RaceunstartType) => Promise<Result<BaseResultType.RaceunstartType[]>>
 
     /**
      * @description 创建方法
@@ -46,7 +46,7 @@ export interface BaseTypeMethod {
     /**
      * @description 创建方法
      */
-    usergoodshis: (params: BaseParamsType.UsergoodshisType) => Promise<Result<BaseResultType.UsergoodshisType>>
+    usergoodshis: (params: BaseParamsType.UsergoodshisType) => Promise<Result<BaseResultType.UsergoodshisType[]>>
 
     /**
      * @description 创建方法
@@ -57,6 +57,11 @@ export interface BaseTypeMethod {
      * @description 创建方法
      */
     getallogs: (params: BaseParamsType.GetallogsType) => Promise<Result<BaseResultType.GetallogsType[]>>
+
+    /**
+     * @description 创建方法
+     */
+    getogmanagers: (params: BaseParamsType.GetogmanagersType) => Promise<Result<BaseResultType.GetogmanagersType[]>>
 }
 
 /**
@@ -89,7 +94,7 @@ namespace BaseParamsType {
      * @description 未开赛的赛事
      */
     export interface TicketsType {
-        
+
     }
 
     /**
@@ -124,7 +129,14 @@ namespace BaseParamsType {
      * @description 未开赛的赛事
      */
     export interface GetallogsType {
-        
+
+    }
+
+    /**
+     * @description 未开赛的赛事
+     */
+    export interface GetogmanagersType {
+        ogid: string
     }
 }
 
@@ -280,6 +292,20 @@ namespace BaseResultType {
         Pos: string;
         Username: string;
     }
+
+    /**
+     * @description 未开赛的赛事返回值
+     * @return 
+     */
+    export interface GetogmanagersType {
+        id: number;
+        Image: string;
+        Nickname: string;
+        Ogid: number;
+        Password: string;
+        Racetype: string;
+        Username: string;
+    }
 }
 
 const baseUrl = ''
@@ -318,6 +344,10 @@ const baseApi: BaseTypeMethod = {
     },
     getallogs: async (params) => {
         let url = `${baseUrl}/getallogs`;
+        return await get(url, params);
+    },
+    getogmanagers: async (params) => {
+        let url = `${baseUrl}/getogmanagers/${params.ogid}`;
         return await get(url, params);
     },
 }

@@ -1,64 +1,68 @@
-import { Button, Form, FormProps, Image, Input, Modal, Space, Table, TableProps, message } from "antd";
+import { Button, Form, FormProps, Input, InputNumber, Modal, Space, Table, TableProps, message } from "antd";
 import { BaseResultType, baseApi } from "../../api/base-api";
 import { useDeepCompareEffect } from "ahooks";
 import { useState } from "react";
-import { OrganizerParamsType, organizerApi } from "../../api/organizer-api";
+import { useUserInfo } from "../../hooks/useUserInfo";
+import { TicketsParamsType, ticketsApi } from "../../api/ticket-api";
 
-const Ticket = () => {
-    const columns: TableProps<BaseResultType.GetallogsType>['columns'] = [
+const Race = () => {
+    const { getUserInfo } = useUserInfo()
+    const [form] = Form.useForm();
+    const columns: TableProps<BaseResultType.RaceunstartType>['columns'] = [
         {
             title: 'ID',
             dataIndex: 'id',
-            key: 'id',
             fixed: 'left'
         },
         {
-            title: '赛事方用户名',
-            dataIndex: 'Username',
-            key: 'Username',
+            title: '赛事方管理员ID',
+            dataIndex: 'Ogmgid',
         },
         {
-            title: '赛事方昵称名',
-            dataIndex: 'Nickname',
-            key: 'Nickname',
+            title: '比赛名称',
+            dataIndex: 'Name',
         },
         {
-            title: '赛事方信息',
-            dataIndex: 'Info',
-            key: 'Info',
+            title: '赛事方ID',
+            dataIndex: 'Ogid',
         },
         {
-            title: '位置',
-            dataIndex: 'Pos',
-            key: 'Pos',
+            title: '场地ID',
+            dataIndex: 'Placeid',
         },
         {
-            title: '联系方式',
-            dataIndex: 'Contact',
-            key: 'Contact',
+            title: '开始时间',
+            dataIndex: 'Stime',
         },
         {
-            title: '邮箱',
-            dataIndex: 'Email',
-            key: 'Email',
+            title: '比赛状态',
+            dataIndex: 'Status',
         },
         {
-            title: '图片',
-            dataIndex: 'Image',
-            key: 'Image',
-            render: (_, record) => {
-                return (
-                    <Image src={record.Image}></Image>
-                )
-            },
+            title: '球队1ID',
+            dataIndex: 'Teamid1',
+        },
+        {
+            title: '球队1得分',
+            dataIndex: 'Teamscore1',
+        },
+        {
+            title: '球队2ID',
+            dataIndex: 'Teamid2',
+        },
+        {
+            title: '球队2得分',
+            dataIndex: 'Teamscore2',
         },
         {
             title: '操作',
-            key: 'action',
+            dataIndex: 'action',
             fixed: 'right',
+            width: 180,
             render: (_, record) => (
                 <Space size="middle">
-                    <Button type="primary" ghost danger onClick={() => del(record.Username)}>删除</Button>
+                    {/* <Button type="primary" onClick={() => showModal(record)}>编辑</Button> */}
+                    <Button type="primary" onClick={() => showModal(record.id)}>发布门票</Button>
                 </Space>
             ),
         },
@@ -67,46 +71,68 @@ const Ticket = () => {
     const [dataSource, setDataSource] = useState([
         {
             "id": 2,
-            "Username": "ogadmin1",
-            "Password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
-            "Nickname": "og1",
-            "Info": "北京工人体育场赛事方，xxxxx",
-            "Pos": "北京市",
-            "Contact": "1008685",
-            "Email": "12334131@qq.com",
-            "Image": "/static/image/og/a.png"
+            "Ogmgid": 1,
+            "Name": "湖人VS勇士常规赛",
+            "Ogid": 1,
+            "Placeid": 1,
+            "Stime": "2024-09-12",
+            "Status": "未开始",
+            "Teamid1": 1,
+            "Teamscore1": 0,
+            "Teamid2": 2,
+            "Teamscore2": 0
         },
         {
             "id": 3,
-            "Username": "ogadmin2",
-            "Password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
-            "Nickname": "og2",
-            "Info": "上海工人体育场赛事方，xxxxx",
-            "Pos": "上海市",
-            "Contact": "12739817389",
-            "Email": "aasdad@qq.com",
-            "Image": "/static/image/og/a.png"
+            "Ogmgid": 1,
+            "Name": "湖人VS勇士季后赛",
+            "Ogid": 1,
+            "Placeid": 1,
+            "Stime": "2024-09-14",
+            "Status": "未开始",
+            "Teamid1": 1,
+            "Teamscore1": 0,
+            "Teamid2": 2,
+            "Teamscore2": 0
         }
     ])
     const fetchData = async () => {
         try {
-            const res = await baseApi.getallogs({})
+            const res = await baseApi.raceunstart({
+                ogid: getUserInfo('userInfo').id
+            })
             if (res.code === 200) {
-
+                if (res.data) {
+                    setDataSource(res.data)
+                }
             }
         } catch (error) {
             console.log(error);
         }
     }
 
-    const del = async (username: string) => {
+    const edit = async (id: number) => {
         try {
-            const res = await organizerApi.delog({
-                username
-            })
-            if (res.code === 200) {
-                message.success(res.msg)
-            }
+            // const res = await organizerApi.delog({
+            //     username
+            // })
+            // if (res.code === 200) {
+            //     message.success(res.msg)
+            // }
+            fetchData()
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const del = async (id: number) => {
+        try {
+            // const res = await organizerApi.delog({
+            //     username
+            // })
+            // if (res.code === 200) {
+            //     message.success(res.msg)
+            // }
             fetchData()
         } catch (error) {
             console.log(error);
@@ -118,8 +144,11 @@ const Ticket = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const showModal = () => {
+    const showModal = (raceid?: number) => {
         setIsModalOpen(true);
+        form.setFieldsValue({
+            raceid: raceid,
+        })
     };
 
     const handleOk = () => {
@@ -130,9 +159,9 @@ const Ticket = () => {
         setIsModalOpen(false);
     };
 
-    const onFinish: FormProps<OrganizerParamsType.CreateogType>['onFinish'] = async (values) => {
+    const onFinish: FormProps<TicketsParamsType.PubTicketsType>['onFinish'] = async (values) => {
         try {
-            const res = await organizerApi.createog(values)
+            const res = await ticketsApi.pubtickets(values)
             if (res.code === 200) {
                 message.success(res.msg)
             }
@@ -142,12 +171,11 @@ const Ticket = () => {
         }
     };
 
-    const onFinishFailed: FormProps<OrganizerParamsType.CreateogType>['onFinishFailed'] = (errorInfo) => {
+    const onFinishFailed: FormProps<TicketsParamsType.PubTicketsType>['onFinishFailed'] = (errorInfo) => {
         console.log('Failed:', errorInfo);
     };
 
     return <div style={{ padding: '20px 0' }}>
-        <Button type="primary" style={{ marginBottom: '20px' }} onClick={showModal}>新增</Button>
         <Modal title="填写" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} centered footer={null}>
             <Form
                 name="basic"
@@ -157,68 +185,29 @@ const Ticket = () => {
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
                 autoComplete="off"
+                form={form}
             >
-                <Form.Item
-                    label="ID"
-                    name="id"
+                <Form.Item<TicketsParamsType.PubTicketsType>
+                    label="raceID"
+                    name="raceid"
                 >
                     <Input disabled />
                 </Form.Item>
 
-                <Form.Item<OrganizerParamsType.CreateogType>
-                    label="赛事方用户名"
-                    name="username"
-                    rules={[{ required: true, message: '请填写赛事方用户名' }]}
+                <Form.Item<TicketsParamsType.PubTicketsType>
+                    label="库存"
+                    name="count"
+                    rules={[{ required: true, message: '请填写库存' }]}
                 >
-                    <Input />
+                    <InputNumber />
                 </Form.Item>
 
-                <Form.Item<OrganizerParamsType.CreateogType>
-                    label="赛事方昵称名"
-                    name="nickname"
-                    rules={[{ required: true, message: '请填写赛事方昵称名' }]}
+                <Form.Item<TicketsParamsType.PubTicketsType>
+                    label="价格"
+                    name="price"
+                    rules={[{ required: true, message: '请填写价格' }]}
                 >
-                    <Input />
-                </Form.Item>
-
-                <Form.Item<OrganizerParamsType.CreateogType>
-                    label="赛事方信息"
-                    name="info"
-                    rules={[{ required: true, message: '请填写赛事方信息' }]}
-                >
-                    <Input.TextArea />
-                </Form.Item>
-
-                <Form.Item<OrganizerParamsType.CreateogType>
-                    label="位置"
-                    name="pos"
-                    rules={[{ required: true, message: '请填写位置' }]}
-                >
-                    <Input />
-                </Form.Item>
-
-                <Form.Item<OrganizerParamsType.CreateogType>
-                    label="邮编"
-                    name="contact"
-                    rules={[{ required: true, message: '请填写邮编' }]}
-                >
-                    <Input />
-                </Form.Item>
-
-                <Form.Item<OrganizerParamsType.CreateogType>
-                    label="邮箱"
-                    name="email"
-                    rules={[{ required: true, message: '请填写邮箱' }]}
-                >
-                    <Input />
-                </Form.Item>
-
-                <Form.Item<OrganizerParamsType.CreateogType>
-                    label="图片"
-                    name="image"
-                    rules={[{ required: true, message: '请上传图片' }]}
-                >
-                    <Input />
+                    <InputNumber />
                 </Form.Item>
 
                 <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
@@ -232,4 +221,4 @@ const Ticket = () => {
     </div>
 }
 
-export default Ticket
+export default Race
