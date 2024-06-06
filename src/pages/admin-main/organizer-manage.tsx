@@ -99,7 +99,9 @@ const OrganizerManage = () => {
         try {
             const res = await baseApi.getallogs({})
             if (res.code === 200) {
-
+                if (res.data) {
+                    setDataSource(res.data)
+                }
             }
         } catch (error) {
             console.log(error);

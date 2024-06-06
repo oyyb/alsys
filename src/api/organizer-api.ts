@@ -76,6 +76,7 @@ const organizerApi: OrganizerTypeMethod = {
         let url = `${baseUrl}/createog`;
         return await post(url, params);
     },
+    
     delog: async (params) => {
         let url = `${baseUrl}/delog`;
         return await post(url, params);

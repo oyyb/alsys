@@ -21,6 +21,7 @@ import UserPlace from "../pages/user-main/user-place";
 import UserCar from "../pages/user-main/user-car";
 import UserTicket from "../pages/user-main/user-ticket";
 import UserBuy from "../pages/user-main/user-buy";
+import TeamDetail from "../pages/user-main/team-detail";
 // import { lazy } from "react";
 
 // const NotFound = lazy(()=>import('../pages/not-found/not-found'))
@@ -98,6 +99,10 @@ export const routes: Route[] = [
             {
                 path: 'user-index',
                 element: <UserIndex />
+            },
+            {
+                path: 'team-detail/:id',
+                element: <TeamDetail />
             },
             {
                 path: 'user-ticket',

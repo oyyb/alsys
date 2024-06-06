@@ -16,43 +16,43 @@ const Race = () => {
         },
         {
             title: '赛事方管理员ID',
-            dataIndex: 'Ogmgid',
+            dataIndex: 'ogmgid',
         },
         {
             title: '比赛名称',
-            dataIndex: 'Name',
+            dataIndex: 'name',
         },
         {
             title: '赛事方ID',
-            dataIndex: 'Ogid',
+            dataIndex: 'ogid',
         },
         {
             title: '场地ID',
-            dataIndex: 'Placeid',
+            dataIndex: 'placeid',
         },
         {
             title: '开始时间',
-            dataIndex: 'Stime',
+            dataIndex: 'stime',
         },
         {
             title: '比赛状态',
-            dataIndex: 'Status',
+            dataIndex: 'status',
         },
         {
             title: '球队1ID',
-            dataIndex: 'Teamid1',
+            dataIndex: 'teamid1',
         },
         {
             title: '球队1得分',
-            dataIndex: 'Teamscore1',
+            dataIndex: 'teamscore1',
         },
         {
             title: '球队2ID',
-            dataIndex: 'Teamid2',
+            dataIndex: 'teamid2',
         },
         {
             title: '球队2得分',
-            dataIndex: 'Teamscore2',
+            dataIndex: 'teamscore2',
         },
         {
             title: '操作',
@@ -68,32 +68,36 @@ const Race = () => {
         },
     ];
 
-    const [dataSource, setDataSource] = useState([
+    const [dataSource, setDataSource] = useState<BaseResultType.RaceunstartType[]>([
         {
             "id": 2,
-            "Ogmgid": 1,
-            "Name": "湖人VS勇士常规赛",
-            "Ogid": 1,
-            "Placeid": 1,
-            "Stime": "2024-09-12",
-            "Status": "未开始",
-            "Teamid1": 1,
-            "Teamscore1": 0,
-            "Teamid2": 2,
-            "Teamscore2": 0
+            "name": "湖人VS勇士常规赛",
+            "ogid": 1,
+            "ogmgid": 1,
+            "placeid": 1,
+            "status": "未开始",
+            "stime": "2024-09-12",
+            "team1image": "http://127.0.0.1:8081/images/hurendui.png",
+            "team2image": "http://127.0.0.1:8081/images/yongshidui.jpg",
+            "teamid1": 1,
+            "teamid2": 2,
+            "teamscore1": 1,
+            "teamscore2": 1
         },
         {
             "id": 3,
-            "Ogmgid": 1,
-            "Name": "湖人VS勇士季后赛",
-            "Ogid": 1,
-            "Placeid": 1,
-            "Stime": "2024-09-14",
-            "Status": "未开始",
-            "Teamid1": 1,
-            "Teamscore1": 0,
-            "Teamid2": 2,
-            "Teamscore2": 0
+            "name": "湖人VS勇士季后赛",
+            "ogid": 1,
+            "ogmgid": 1,
+            "placeid": 1,
+            "status": "未开始",
+            "stime": "2024-09-14",
+            "team1image": "http://127.0.0.1:8081/images/hurendui.png",
+            "team2image": "http://127.0.0.1:8081/images/yongshidui.jpg",
+            "teamid1": 1,
+            "teamid2": 2,
+            "teamscore1": 0,
+            "teamscore2": 0
         }
     ])
     const fetchData = async () => {

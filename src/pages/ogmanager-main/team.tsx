@@ -6,12 +6,14 @@ import { TeamParamsType, teamApi } from "../../api/team-api";
 import { PlusOutlined } from '@ant-design/icons';
 import { FileType, getBase64 } from "../../utils/myUtils";
 import uploadApi from "../../api/upload-api";
+import { useUserInfo } from "../../hooks/useUserInfo";
 
 const Team = () => {
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
     const [form] = Form.useForm();
+    const { getUserInfo } = useUserInfo()
     const columns: TableProps<BaseResultType.TeamType>['columns'] = [
         {
             title: 'ID',
@@ -100,9 +102,13 @@ const Team = () => {
     ])
     const fetchData = async () => {
         try {
-            const res = await baseApi.getallogs({})
+            const res = await baseApi.team({
+                ogid: getUserInfo('userInfo').id
+            })
             if (res.code === 200) {
-
+                if (res.data) {
+                    setDataSource(res.data)
+                }
             }
         } catch (error) {
             console.log(error);
@@ -205,7 +211,7 @@ const Team = () => {
             <div style={{ marginTop: 8 }}>上传图片</div>
         </button>
     );
-    
+
     return <div style={{ padding: '20px 0' }}>
         <Button type="primary" style={{ marginBottom: '20px' }} onClick={showModal}>新增</Button>
         <Modal title="填写" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} centered footer={null}>

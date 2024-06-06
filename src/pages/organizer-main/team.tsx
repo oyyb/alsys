@@ -6,13 +6,14 @@ import { TeamParamsType, teamApi } from "../../api/team-api";
 import uploadApi from "../../api/upload-api";
 import { FileType, getBase64 } from "../../utils/myUtils";
 import { PlusOutlined } from '@ant-design/icons';
+import { useUserInfo } from "../../hooks/useUserInfo";
 
 const OrganizerTeam = () => {
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
     const [form] = Form.useForm();
-
+    const { getUserInfo } = useUserInfo()
     const columns: TableProps<BaseResultType.TeamType>['columns'] = [
         {
             title: 'ID',
@@ -101,9 +102,13 @@ const OrganizerTeam = () => {
     ])
     const fetchData = async () => {
         try {
-            const res = await baseApi.getallogs({})
+            const res = await baseApi.team({
+                ogid: getUserInfo('userInfo').id
+            })
             if (res.code === 200) {
-
+                if (res.data) {
+                    setDataSource(res.data)
+                }
             }
         } catch (error) {
             console.log(error);

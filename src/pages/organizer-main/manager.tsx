@@ -34,11 +34,11 @@ const Manager = () => {
             dataIndex: 'Nickname',
             key: 'Nickname',
         },
-        {
-            title: '管理员密码',
-            dataIndex: 'Password',
-            key: 'Password',
-        },
+        // {
+        //     title: '管理员密码',
+        //     dataIndex: 'Password',
+        //     key: 'Password',
+        // },
         {
             title: '赛事方ID',
             dataIndex: 'Ogid',
@@ -117,7 +117,6 @@ const Manager = () => {
     }, [])
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-
     const showModal = () => {
         setIsModalOpen(true);
     };
@@ -132,7 +131,10 @@ const Manager = () => {
 
     const onFinish: FormProps<OgmanagerParamsType.CreateogType>['onFinish'] = async (values) => {
         try {
-            const res = await ogmanagerApi.createogmanager(values)
+            const res = await ogmanagerApi.createogmanager({
+                ...values,
+                ogid: getUserInfo('userInfo').id
+            })
             if (res.code === 200) {
                 message.success(res.msg)
             }

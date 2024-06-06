@@ -16,7 +16,7 @@ export interface BaseTypeMethod {
     /**
      * @description 创建方法
      */
-    team: (params: BaseParamsType.TeamType) => Promise<Result<BaseResultType.TeamType>>
+    team: (params: BaseParamsType.TeamType) => Promise<Result<BaseResultType.TeamType[]>>
 
     /**
      * @description 删除方法
@@ -167,16 +167,18 @@ namespace BaseResultType {
      */
     export interface RaceunstartType {
         id: number;
-        Name: string;
-        Ogid: number;
-        Ogmgid: number;
-        Placeid: number;
-        Status: string;
-        Stime: string;
-        Teamid1: number;
-        Teamid2: number;
-        Teamscore1: number;
-        Teamscore2: number;
+        name: string;
+        ogid: number;
+        ogmgid: number;
+        placeid: number;
+        status: string;
+        stime: string;
+        teamid1: number;
+        teamid2: number;
+        teamscore1: number;
+        teamscore2: number;
+        team1image: string;
+        team2image: string;
     }
 
     /**
@@ -184,17 +186,39 @@ namespace BaseResultType {
      * @return 
      */
     export interface TeaminfoType {
-        id: number;
-        Name: string;
-        Ogid: number;
-        Ogmgid: number;
-        Placeid: number;
-        Status: string;
-        Stime: string;
-        Teamid1: number;
-        Teamid2: number;
-        Teamscore1: number;
-        Teamscore2: number;
+        players: {
+            Age?: number;
+            Height?: number;
+            id?: number;
+            Image?: string;
+            Name?: string;
+            Sex?: string;
+            Teamid?: number;
+            Weight?: number;
+        }[];
+        racehis: {
+            id?: number;
+            Name?: string;
+            Ogid?: number;
+            Ogmgid?: number;
+            Placeid?: number;
+            Status?: string;
+            Stime?: string;
+            Teamid1?: number;
+            Teamid2?: number;
+            Teamscore1?: number;
+            Teamscore2?: number;
+        }[];
+        team: {
+            id: number;
+            image: string;
+            info: string;
+            lose: number;
+            name: string;
+            ogid: number;
+            racetype: string;
+            win: number;
+        };
     }
 
     /**
@@ -311,15 +335,15 @@ namespace BaseResultType {
 const baseUrl = ''
 const baseApi: BaseTypeMethod = {
     team: async (params) => {
-        let url = `${baseUrl}/team`;
+        let url = `${baseUrl}/team?ogid=${params.ogid}`;
         return await get(url, params);
     },
     raceunstart: async (params) => {
-        let url = `${baseUrl}/raceunstart`;
+        let url = `${baseUrl}/raceunstart?ogid=${params.ogid}`;
         return await get(url, params);
     },
     teaminfo: async (params) => {
-        let url = `${baseUrl}/teaminfo`;
+        let url = `${baseUrl}/teaminfo?teamid=${params.teamid}`;
         return await get(url, params);
     },
     tickets: async (params) => {
@@ -331,11 +355,11 @@ const baseApi: BaseTypeMethod = {
         return await get(url, params);
     },
     userticketshis: async (params) => {
-        let url = `${baseUrl}/userticketshis`;
+        let url = `${baseUrl}/userticketshis?userid=${params.userid}`;
         return await get(url, params);
     },
     usergoodshis: async (params) => {
-        let url = `${baseUrl}/usergoodshis`;
+        let url = `${baseUrl}/usergoodshis?userid=${params.userid}`;
         return await get(url, params);
     },
     usableplaces: async (params) => {
@@ -347,7 +371,7 @@ const baseApi: BaseTypeMethod = {
         return await get(url, params);
     },
     getogmanagers: async (params) => {
-        let url = `${baseUrl}/getogmanagers/${params.ogid}`;
+        let url = `${baseUrl}/getogmanagers?ogid=${params.ogid}`;
         return await get(url, params);
     },
 }

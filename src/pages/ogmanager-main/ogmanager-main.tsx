@@ -79,7 +79,7 @@ export default function OgmanagerMain() {
                     />
                     <Space style={{padding:'20px'}}>
                         {
-                            userInfo?.name ? <p>欢迎您：{userInfo.name}</p> : <></>
+                            userInfo?.Nickname ? <p>欢迎您：{userInfo.Nickname}</p> : <></>
                         }
                         <Dropdown menu={{ items: dropdownItems }} >
                             <div onClick={(e) => e.preventDefault()}>

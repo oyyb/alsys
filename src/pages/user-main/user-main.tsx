@@ -1,9 +1,15 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import './user-main.css'
 import { useEffect, useState } from "react";
-import { ConfigProvider } from "antd";
+import { ConfigProvider, Dropdown, MenuProps, Space } from "antd";
+import { DownOutlined } from "@ant-design/icons";
+import { useUserInfo } from "../../hooks/useUserInfo";
+
+type MenuItem = Required<MenuProps>['items'][number];
 
 export default function UserMain() {
+    const { getUserInfo, removeUserInfo } = useUserInfo()
+    const userInfo = getUserInfo('userInfo')
     const navigate = useNavigate()
     const route = useLocation()
     const [activeNav, setActiveNav] = useState<string>()
@@ -33,6 +39,24 @@ export default function UserMain() {
             title: '购买记录'
         },
     ]
+
+    const logout = () => {
+        removeUserInfo('userInfo')
+        removeUserInfo('token')
+        navigate('/login')
+    }
+    const dropdownItems: MenuItem[] = [
+        {
+            key: '/logout',
+            label: (
+                <p onClick={logout}>
+                    退出登陆
+                </p>
+            ),
+            // icon: <PieChartOutlined />
+        },
+    ]
+    
     useEffect(() => {
         setActiveNav(route.pathname)
     }, [route.pathname])
@@ -60,6 +84,19 @@ export default function UserMain() {
                             }}>{val.title}</div>
                         })
                     }
+                    <Space style={{padding:'20px'}}>
+                        {
+                            userInfo?.Nickname ? <p>欢迎您：{userInfo.Nickname}</p> : <></>
+                        }
+                        <Dropdown menu={{ items: dropdownItems }} >
+                            <div onClick={(e) => e.preventDefault()}>
+                                <Space>
+                                    更多设置
+                                    <DownOutlined />
+                                </Space>
+                            </div>
+                        </Dropdown>
+                    </Space>
                 </div>
                 <div style={{ marginTop: '80px', padding: '20px' }}>
                     <Outlet></Outlet>

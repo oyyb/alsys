@@ -21,6 +21,11 @@ export interface RaceTypeMethod {
     createrace: (params: RaceParamsType.CreateRaceType) => Promise<Result<RaceResultType.CreateRaceType>>
 
     /**
+     * @description 修改方法
+     */
+    updaterace: (params: RaceParamsType.UpdateRaceType) => Promise<Result<RaceResultType.UpdateRaceType>>
+
+    /**
      * @description 开始方法
      */
     startrace: (params: RaceParamsType.StartRaceType) => Promise<Result<RaceResultType.StartRaceType>>
@@ -46,6 +51,13 @@ namespace RaceParamsType {
      */
     export interface CreateRaceType extends RaceEntity {
 
+    }
+
+    /**
+     * @description 创建
+     */
+    export interface UpdateRaceType extends RaceEntity {
+        raceid: string
     }
 
     /**
@@ -85,6 +97,14 @@ namespace RaceResultType {
 
     }
 
+    /**
+     * @description 编辑返回值
+     * @return 
+     */
+    export interface UpdateRaceType {
+
+    }
+
 
     /**
      * @description 开始返回值
@@ -115,6 +135,10 @@ const baseUrl = '/ogmanager'
 const raceApi: RaceTypeMethod = {
     createrace: async (params) => {
         let url = `${baseUrl}/createrace`;
+        return await post(url, params);
+    },
+    updaterace: async (params) => {
+        let url = `${baseUrl}/updaterace`;
         return await post(url, params);
     },
     startrace: async (params) => {

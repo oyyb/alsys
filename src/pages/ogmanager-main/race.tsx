@@ -1,10 +1,10 @@
-import { Button, DatePicker, DatePickerProps, Form, FormInstance, FormProps, Image, Input, Modal, Space, Table, TableProps, message } from "antd";
+import { Button, DatePicker, DatePickerProps, Form, FormInstance, FormProps, Image, Input, InputNumber, Modal, Space, Table, TableProps, message } from "antd";
 import { BaseResultType, baseApi } from "../../api/base-api";
 import { useDeepCompareEffect } from "ahooks";
 import { useState } from "react";
 import { OrganizerParamsType, organizerApi } from "../../api/organizer-api";
 import { useUserInfo } from "../../hooks/useUserInfo";
-import { RaceParamsType } from "../../api/race-api";
+import { RaceParamsType, raceApi } from "../../api/race-api";
 import dayjs from "dayjs";
 
 const Race = () => {
@@ -18,43 +18,43 @@ const Race = () => {
         },
         {
             title: '赛事方管理员ID',
-            dataIndex: 'Ogmgid',
+            dataIndex: 'ogmgid',
         },
         {
             title: '比赛名称',
-            dataIndex: 'Name',
+            dataIndex: 'name',
         },
         {
             title: '赛事方ID',
-            dataIndex: 'Ogid',
+            dataIndex: 'ogid',
         },
         {
             title: '场地ID',
-            dataIndex: 'Placeid',
+            dataIndex: 'placeid',
         },
         {
             title: '开始时间',
-            dataIndex: 'Stime',
+            dataIndex: 'stime',
         },
         {
             title: '比赛状态',
-            dataIndex: 'Status',
+            dataIndex: 'status',
         },
         {
             title: '球队1ID',
-            dataIndex: 'Teamid1',
+            dataIndex: 'teamid1',
         },
         {
             title: '球队1得分',
-            dataIndex: 'Teamscore1',
+            dataIndex: 'teamscore1',
         },
         {
             title: '球队2ID',
-            dataIndex: 'Teamid2',
+            dataIndex: 'teamid2',
         },
         {
             title: '球队2得分',
-            dataIndex: 'Teamscore2',
+            dataIndex: 'teamscore2',
         },
         {
             title: '操作',
@@ -70,41 +70,47 @@ const Race = () => {
         },
     ];
 
-    const [dataSource, setDataSource] = useState([
+    const [dataSource, setDataSource] = useState<BaseResultType.RaceunstartType[]>([
         {
-            "id": 2,
-            "Ogmgid": 1,
-            "Name": "湖人VS勇士常规赛",
-            "Ogid": 1,
-            "Placeid": 1,
-            "Stime": "2024-09-12",
-            "Status": "未开始",
-            "Teamid1": 1,
-            "Teamscore1": 0,
-            "Teamid2": 2,
-            "Teamscore2": 0
+          "id": 2,
+          "name": "湖人VS勇士常规赛",
+          "ogid": 1,
+          "ogmgid": 1,
+          "placeid": 1,
+          "status": "未开始",
+          "stime": "2024-09-12",
+          "team1image": "http://127.0.0.1:8081/images/hurendui.png",
+          "team2image": "http://127.0.0.1:8081/images/yongshidui.jpg",
+          "teamid1": 1,
+          "teamid2": 2,
+          "teamscore1": 1,
+          "teamscore2": 1
         },
         {
-            "id": 3,
-            "Ogmgid": 1,
-            "Name": "湖人VS勇士季后赛",
-            "Ogid": 1,
-            "Placeid": 1,
-            "Stime": "2024-09-14",
-            "Status": "未开始",
-            "Teamid1": 1,
-            "Teamscore1": 0,
-            "Teamid2": 2,
-            "Teamscore2": 0
+          "id": 3,
+          "name": "湖人VS勇士季后赛",
+          "ogid": 1,
+          "ogmgid": 1,
+          "placeid": 1,
+          "status": "未开始",
+          "stime": "2024-09-14",
+          "team1image": "http://127.0.0.1:8081/images/hurendui.png",
+          "team2image": "http://127.0.0.1:8081/images/yongshidui.jpg",
+          "teamid1": 1,
+          "teamid2": 2,
+          "teamscore1": 0,
+          "teamscore2": 0
         }
-    ])
+      ])
     const fetchData = async () => {
         try {
             const res = await baseApi.raceunstart({
                 ogid: getUserInfo('userInfo').id
             })
             if (res.code === 200) {
-
+                if (res.data) {
+                    setDataSource(res.data)
+                }
             }
         } catch (error) {
             console.log(error);
@@ -147,14 +153,13 @@ const Race = () => {
     const showModal = (data?: BaseResultType.RaceunstartType) => {
         setIsModalOpen(true);
         form.setFieldsValue({
-            id: data?.id,
-            name: data?.Name,
-            ogid: data?.Ogid,
-            ogmgid: data?.Ogmgid,
-            placeid: data?.Placeid,
-            stime: data?.Stime ? dayjs(data?.Stime) : undefined,
-            team1id: data?.Teamid1,
-            team2id: data?.Teamid2,
+            ...data,
+            raceid: data?.id,
+            stime: data?.stime ? dayjs(data?.stime) : undefined,
+            team1id: data?.teamid1,
+            team2id: data?.teamid2,
+            team1score: data?.teamscore1,
+            team2score: data?.teamscore2
         })
     };
 
@@ -166,19 +171,19 @@ const Race = () => {
         setIsModalOpen(false);
     };
 
-    const onFinish: FormProps<OrganizerParamsType.CreateogType>['onFinish'] = async (values) => {
+    const onFinish: FormProps<RaceParamsType.CreateRaceType & { raceid: string }>['onFinish'] = async (values) => {
         try {
-            // const res = await organizerApi.createog(values)
-            // if (res.code === 200) {
-            //     message.success(res.msg)
-            // }
+            const res = values.raceid ? await raceApi.updaterace(values) : await raceApi.createrace(values)
+            if (res.code === 200) {
+                message.success(res.msg)
+            }
             fetchData()
         } catch (error) {
             console.log(error);
         }
     };
 
-    const onFinishFailed: FormProps<OrganizerParamsType.CreateogType>['onFinishFailed'] = (errorInfo) => {
+    const onFinishFailed: FormProps<RaceParamsType.CreateRaceType>['onFinishFailed'] = (errorInfo) => {
         console.log('Failed:', errorInfo);
     };
 
@@ -197,7 +202,7 @@ const Race = () => {
             >
                 <Form.Item
                     label="ID"
-                    name="id"
+                    name="raceid"
                 >
                     <Input disabled />
                 </Form.Item>
@@ -226,12 +231,28 @@ const Race = () => {
                     <Input />
                 </Form.Item>
 
+                <Form.Item
+                    label="1队比分"
+                    name="team1score"
+                    rules={[{ required: true, message: '请填写1队比分' }]}
+                >
+                    <InputNumber />
+                </Form.Item>
+
                 <Form.Item<RaceParamsType.CreateRaceType>
                     label="2队ID"
                     name="team2id"
                     rules={[{ required: true, message: '请填写2队ID' }]}
                 >
                     <Input />
+                </Form.Item>
+
+                <Form.Item
+                    label="2队比分"
+                    name="team2score"
+                    rules={[{ required: true, message: '请填写2队比分' }]}
+                >
+                    <InputNumber />
                 </Form.Item>
 
                 <Form.Item<RaceParamsType.CreateRaceType>
